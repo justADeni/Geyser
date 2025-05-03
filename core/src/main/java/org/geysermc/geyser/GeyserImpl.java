@@ -574,15 +574,9 @@ public class GeyserImpl implements GeyserApi, EventRegistrar {
                     logger.error("Cannot load saved user tokens!", e);
                 }
                 if (authChainFile != null) {
-                    List<String> validUsers = config.getSavedUserLogins();
                     boolean doWrite = false;
                     for (Map.Entry<String, String> entry : authChainFile.entrySet()) {
                         String user = entry.getKey();
-                        if (!validUsers.contains(user)) {
-                            // Perform a write to this file to purge the now-unused name
-                            doWrite = true;
-                            continue;
-                        }
                         savedAuthChains.put(user, entry.getValue());
                     }
                     if (doWrite) {
@@ -845,11 +839,6 @@ public class GeyserImpl implements GeyserApi, EventRegistrar {
     }
 
     public void saveAuthChain(@NonNull String bedrockName, @NonNull String authChain) {
-        if (!getConfig().getSavedUserLogins().contains(bedrockName)) {
-            // Do not save this login
-            return;
-        }
-
         // We can safely overwrite old instances because MsaAuthenticationService#getLoginResponseFromRefreshToken
         // refreshes the token for us
         if (!Objects.equals(authChain, savedAuthChains.put(bedrockName, authChain))) {

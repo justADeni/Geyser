@@ -153,24 +153,8 @@ public class LoginEncryptionUtils {
                         }));
     }
 
-    /**
-     * Build a window that explains the user's credentials will be saved to the system.
-     */
     public static void buildAndShowConsentWindow(GeyserSession session) {
-        String locale = session.locale();
-
-        session.sendForm(
-                SimpleForm.builder()
-                        .translator(LoginEncryptionUtils::translate, locale)
-                        .title("%gui.signIn")
-                        .content("""
-                                geyser.auth.login.save_token.warning
-
-                                geyser.auth.login.save_token.proceed""")
-                        .button("%gui.ok")
-                        .button("%gui.decline")
-                        .resultHandler(authenticateOrKickHandler(session))
-        );
+        session.authenticateWithMicrosoftCode(true);
     }
 
     public static void buildAndShowTokenExpiredWindow(GeyserSession session) {
